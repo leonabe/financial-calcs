@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Steiner Ch1 - Financial Calculations</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>Steiner Chapter 1 - Time Value of Money</h1>
+        <p>Interactive calculators from the book</p>
+    </header>
+
+    <nav>
+        <a href="#compound">Compound Interest</a>
+        <a href="#future">Future Value</a>
+        <a href="#present">Present Value</a>
+        <a href="#discount">Discount Factors</a>
+        <a href="#rates">Nominal vs Effective</a>
+    </nav>
+
+    <main>
+        <!-- Compound Interest -->
+        <section id="compound">
+            <h2>Compound Interest</h2>
+            <div class="calculator">
+                <label>Principal (£): <input type="number" id="principal" value="1000" oninput="calculateCompound()"></label>
+                <label>Annual Rate (%): <input type="number" id="rate" value="5" step="0.1" oninput="calculateCompound()"></label>
+                <label>Years: <input type="number" id="years" value="5" oninput="calculateCompound()"></label>
+                <p id="compoundResult">Future Value: £...</p>
+            </div>
+        </section>
+
+        <!-- Add more sections similarly for other topics -->
+        <!-- Future Value, Present Value, etc. -->
+
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>
