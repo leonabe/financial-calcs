@@ -1,0 +1,844 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Finance Formula Lab | Chapter 1</title>
+  <meta name="description" content="Interactive Chapter 1 finance arithmetic notes and calculators." />
+
+  <style>
+    :root {
+      --bg: #080b12;
+      --panel: rgba(255,255,255,0.075);
+      --panel-2: rgba(255,255,255,0.11);
+      --panel-3: rgba(255,255,255,0.16);
+      --text: #eef4ff;
+      --muted: #9aa9bd;
+      --faint: #65758b;
+      --line: rgba(255,255,255,0.13);
+      --blue: #66e3ff;
+      --violet: #9b8cff;
+      --green: #7CFFB2;
+      --gold: #ffd166;
+      --red: #ff6b7a;
+      --shadow: 0 20px 70px rgba(0,0,0,0.45);
+      --radius: 24px;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      --sans: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: var(--sans);
+      background:
+        radial-gradient(circle at 10% 0%, rgba(102, 227, 255, 0.13), transparent 28rem),
+        radial-gradient(circle at 90% 5%, rgba(155, 140, 255, 0.14), transparent 30rem),
+        radial-gradient(circle at 50% 100%, rgba(124, 255, 178, 0.08), transparent 32rem),
+        var(--bg);
+      color: var(--text);
+      line-height: 1.55;
+    }
+
+    a { color: inherit; text-decoration: none; }
+    .shell { min-height: 100vh; display: grid; grid-template-columns: 290px 1fr; }
+    .sidebar {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      padding: 28px 22px;
+      border-right: 1px solid var(--line);
+      background: rgba(8, 11, 18, 0.72);
+      backdrop-filter: blur(22px);
+      overflow-y: auto;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 26px;
+    }
+    .logo {
+      width: 44px;
+      height: 44px;
+      display: grid;
+      place-items: center;
+      border-radius: 14px;
+      background: linear-gradient(135deg, var(--blue), var(--violet));
+      color: #071018;
+      font-weight: 900;
+      box-shadow: 0 10px 30px rgba(102,227,255,0.18);
+    }
+    .brand h1 { font-size: 16px; line-height: 1.15; margin: 0; }
+    .brand span { display: block; color: var(--muted); font-size: 12px; margin-top: 3px; }
+
+    .search {
+      width: 100%;
+      padding: 12px 13px;
+      border-radius: 14px;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,0.07);
+      color: var(--text);
+      outline: none;
+      margin-bottom: 18px;
+    }
+    .search::placeholder { color: var(--faint); }
+
+    .nav-title {
+      font-size: 11px;
+      color: var(--faint);
+      text-transform: uppercase;
+      letter-spacing: .14em;
+      margin: 18px 0 8px;
+    }
+    .nav {
+      display: grid;
+      gap: 6px;
+    }
+    .nav a {
+      color: var(--muted);
+      padding: 8px 10px;
+      border-radius: 12px;
+      font-size: 14px;
+    }
+    .nav a:hover,
+    .nav a.active {
+      background: rgba(255,255,255,0.09);
+      color: var(--text);
+    }
+
+    main {
+      padding: 34px 44px 80px;
+      max-width: 1240px;
+      width: 100%;
+      margin: 0 auto;
+    }
+
+    .hero {
+      padding: 42px;
+      border: 1px solid var(--line);
+      background:
+        linear-gradient(135deg, rgba(255,255,255,0.12), rgba(255,255,255,0.055)),
+        radial-gradient(circle at 80% 20%, rgba(102,227,255,.18), transparent 22rem);
+      border-radius: calc(var(--radius) + 8px);
+      box-shadow: var(--shadow);
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::after {
+      content: "";
+      position: absolute;
+      width: 340px;
+      height: 340px;
+      border-radius: 999px;
+      background: radial-gradient(circle, rgba(255,209,102,.16), transparent 68%);
+      right: -130px;
+      top: -110px;
+      pointer-events: none;
+    }
+    .eyebrow {
+      display: inline-flex;
+      gap: 8px;
+      align-items: center;
+      color: var(--green);
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+    .hero h2 {
+      font-size: clamp(34px, 5vw, 68px);
+      margin: 0 0 14px;
+      line-height: .96;
+      letter-spacing: -0.055em;
+    }
+    .hero p {
+      max-width: 760px;
+      color: var(--muted);
+      font-size: 18px;
+      margin: 0;
+    }
+    .hero-actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 28px;
+    }
+    .button {
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,0.09);
+      padding: 12px 16px;
+      border-radius: 14px;
+      color: var(--text);
+      font-weight: 800;
+      cursor: pointer;
+      transition: transform .15s ease, background .15s ease;
+    }
+    .button:hover { transform: translateY(-1px); background: rgba(255,255,255,0.14); }
+    .button.primary {
+      background: linear-gradient(135deg, var(--blue), var(--violet));
+      color: #071018;
+      border-color: transparent;
+    }
+
+    .section {
+      margin-top: 34px;
+      padding-top: 8px;
+    }
+    .section h3 {
+      font-size: 30px;
+      margin: 0 0 14px;
+      letter-spacing: -0.03em;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 18px;
+    }
+    .card {
+      grid-column: span 6;
+      border: 1px solid var(--line);
+      background: var(--panel);
+      border-radius: var(--radius);
+      padding: 22px;
+      box-shadow: 0 16px 44px rgba(0,0,0,0.22);
+    }
+    .card.full { grid-column: 1 / -1; }
+    .card.third { grid-column: span 4; }
+    .card h4 {
+      font-size: 21px;
+      margin: 0 0 8px;
+      letter-spacing: -0.02em;
+    }
+    .card p { color: var(--muted); margin: 0 0 12px; }
+    .formula {
+      font-family: var(--mono);
+      background: rgba(0,0,0,0.28);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 16px;
+      padding: 14px;
+      color: #f7fbff;
+      overflow-x: auto;
+      margin: 14px 0;
+    }
+    .pill-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+    .pill {
+      font-size: 12px;
+      color: var(--muted);
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,0.055);
+      padding: 6px 10px;
+      border-radius: 999px;
+    }
+
+    .calc {
+      display: grid;
+      grid-template-columns: minmax(260px, 360px) 1fr;
+      gap: 18px;
+      align-items: stretch;
+    }
+    .inputs {
+      display: grid;
+      gap: 12px;
+    }
+    label {
+      display: grid;
+      gap: 6px;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 700;
+    }
+    input {
+      width: 100%;
+      padding: 12px 13px;
+      border-radius: 14px;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,0.08);
+      color: var(--text);
+      outline: none;
+      font: inherit;
+    }
+    input:focus { border-color: rgba(102,227,255,0.55); box-shadow: 0 0 0 4px rgba(102,227,255,0.08); }
+    .result-panel {
+      border: 1px solid var(--line);
+      background:
+        linear-gradient(135deg, rgba(102,227,255,0.09), rgba(155,140,255,0.08)),
+        rgba(255,255,255,0.055);
+      border-radius: 20px;
+      padding: 18px;
+      min-height: 100%;
+    }
+    .big-number {
+      font-size: clamp(28px, 4vw, 48px);
+      line-height: 1;
+      letter-spacing: -0.04em;
+      margin: 8px 0 6px;
+      font-weight: 900;
+    }
+    .sub-number { color: var(--muted); margin-bottom: 14px; }
+    .mini-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0,1fr));
+      gap: 10px;
+      margin-top: 14px;
+    }
+    .metric {
+      padding: 12px;
+      border-radius: 16px;
+      background: rgba(0,0,0,0.22);
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+    .metric span { display: block; color: var(--faint); font-size: 12px; }
+    .metric strong { font-size: 18px; }
+
+    svg.chart {
+      width: 100%;
+      height: 260px;
+      display: block;
+      overflow: visible;
+      margin-top: 16px;
+    }
+    .axis { stroke: rgba(255,255,255,0.20); stroke-width: 1; }
+    .gridline { stroke: rgba(255,255,255,0.08); stroke-width: 1; }
+    .line-blue { fill: none; stroke: var(--blue); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
+    .line-green { fill: none; stroke: var(--green); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
+    .line-gold { fill: none; stroke: var(--gold); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
+    .dot { fill: var(--gold); stroke: #0b0f17; stroke-width: 3; }
+    .chart-label { fill: var(--muted); font: 12px var(--sans); }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 12px;
+      overflow: hidden;
+      border-radius: 16px;
+    }
+    th, td {
+      padding: 11px 12px;
+      border-bottom: 1px solid rgba(255,255,255,0.09);
+      text-align: left;
+    }
+    th { color: var(--muted); font-size: 12px; text-transform: uppercase; letter-spacing: .08em; }
+    td { color: var(--text); }
+    tr:last-child td { border-bottom: 0; }
+
+    .note {
+      border-left: 4px solid var(--blue);
+      padding: 12px 14px;
+      background: rgba(102,227,255,0.07);
+      border-radius: 0 16px 16px 0;
+      color: var(--muted);
+    }
+
+    .footer {
+      margin-top: 44px;
+      color: var(--faint);
+      border-top: 1px solid var(--line);
+      padding-top: 20px;
+      font-size: 14px;
+    }
+
+    @media (max-width: 980px) {
+      .shell { grid-template-columns: 1fr; }
+      .sidebar { position: relative; height: auto; }
+      main { padding: 22px; }
+      .card, .card.third { grid-column: 1 / -1; }
+      .calc { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="shell">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="logo">∑</div>
+        <h1>Finance Formula Lab <span>Chapter 1: Financial Arithmetic Basics</span></h1>
+      </div>
+
+      <input class="search" id="searchBox" placeholder="Search topics..." />
+
+      <div class="nav-title">Chapter 1</div>
+      <nav class="nav" id="nav">
+        <a href="#overview">Overview</a>
+        <a href="#simple-compound">Simple & compound</a>
+        <a href="#nominal-effective">Nominal & effective</a>
+        <a href="#fv-pv">Future & present value</a>
+        <a href="#discount-factors">Discount factors</a>
+        <a href="#interpolation">Interpolation</a>
+        <a href="#glossary">Formula map</a>
+      </nav>
+
+      <div class="nav-title">Calculators</div>
+      <nav class="nav">
+        <a href="#calc-simple-compound">Interest calculator</a>
+        <a href="#calc-effective">Effective rate calculator</a>
+        <a href="#calc-pv">PV calculator</a>
+        <a href="#calc-discount">Discount factor calculator</a>
+        <a href="#calc-interpolation">Interpolation calculator</a>
+      </nav>
+    </aside>
+
+    <main>
+      <section class="hero" id="overview">
+        <div class="eyebrow">🧪 Interactive finance notes</div>
+        <h2>Financial Arithmetic Basics</h2>
+        <p>
+          A clean, interactive Chapter 1 lab for interest, compounding, discounting,
+          present value, future value, discount factors, and interpolation. Notes first,
+          calculators beside them, no spreadsheet goblins chewing the column widths.
+        </p>
+        <div class="hero-actions">
+          <a class="button primary" href="#calc-simple-compound">Start calculating</a>
+          <a class="button" href="#glossary">See formula map</a>
+        </div>
+      </section>
+
+      <section class="section" id="simple-compound" data-topic="simple compound interest">
+        <h3>Simple and compound interest</h3>
+        <div class="grid">
+          <article class="card">
+            <h4>Simple interest</h4>
+            <p>Interest is calculated only on the original principal. The balance grows in a straight line.</p>
+            <div class="formula">A = P(1 + rt)<br>I = Prt</div>
+            <p>For £1,000 at 5% for 3 years, simple interest gives £1,150.</p>
+            <div class="pill-row">
+              <span class="pill">linear growth</span>
+              <span class="pill">no interest-on-interest</span>
+              <span class="pill">quick approximations</span>
+            </div>
+          </article>
+
+          <article class="card">
+            <h4>Compound interest</h4>
+            <p>Interest is calculated on the growing balance. Interest itself starts earning interest.</p>
+            <div class="formula">FV = PV(1 + r)<sup>t</sup><br>FV = PV(1 + r/n)<sup>nt</sup></div>
+            <p>For £1,000 at 5% for 3 years, annual compounding gives about £1,157.63.</p>
+            <div class="pill-row">
+              <span class="pill">curved growth</span>
+              <span class="pill">interest-on-interest</span>
+              <span class="pill">investing engine</span>
+            </div>
+          </article>
+
+          <article class="card full" id="calc-simple-compound">
+            <h4>Calculator: simple vs compound interest</h4>
+            <div class="calc">
+              <div class="inputs">
+                <label>Principal
+                  <input id="sc-principal" type="number" value="1000" step="50">
+                </label>
+                <label>Annual interest rate (%)
+                  <input id="sc-rate" type="number" value="5" step="0.1">
+                </label>
+                <label>Time in years
+                  <input id="sc-years" type="number" value="3" step="0.5">
+                </label>
+                <label>Compounding periods per year
+                  <input id="sc-compounds" type="number" value="1" min="1" step="1">
+                </label>
+              </div>
+              <div class="result-panel">
+                <div class="sub-number">Final amount comparison</div>
+                <div class="mini-grid">
+                  <div class="metric"><span>Simple amount</span><strong id="sc-simple">£0.00</strong></div>
+                  <div class="metric"><span>Compound amount</span><strong id="sc-compound">£0.00</strong></div>
+                  <div class="metric"><span>Difference</span><strong id="sc-diff">£0.00</strong></div>
+                  <div class="metric"><span>Growth edge</span><strong id="sc-edge">0.00%</strong></div>
+                </div>
+                <svg class="chart" id="sc-chart" viewBox="0 0 760 260" role="img" aria-label="Interest growth chart"></svg>
+              </div>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="section" id="nominal-effective" data-topic="nominal effective rates">
+        <h3>Nominal and effective rates</h3>
+        <div class="grid">
+          <article class="card">
+            <h4>The difference</h4>
+            <p>A nominal rate is the quoted annual rate. The effective annual rate is what actually happens after compounding.</p>
+            <div class="formula">EAR = (1 + r/n)<sup>n</sup> − 1</div>
+            <p>More frequent compounding increases the effective rate.</p>
+          </article>
+
+          <article class="card">
+            <h4>Example</h4>
+            <p>12% nominal compounded monthly:</p>
+            <div class="formula">EAR = (1 + 0.12/12)<sup>12</sup> − 1 ≈ 12.68%</div>
+            <p>The headline says 12%, but the actual annual rate is about 12.68%.</p>
+          </article>
+
+          <article class="card full" id="calc-effective">
+            <h4>Calculator: effective annual rate</h4>
+            <div class="calc">
+              <div class="inputs">
+                <label>Nominal annual rate (%)
+                  <input id="er-rate" type="number" value="12" step="0.1">
+                </label>
+                <label>Compounding periods per year
+                  <input id="er-n" type="number" value="12" min="1" step="1">
+                </label>
+              </div>
+              <div class="result-panel">
+                <div class="sub-number">Effective annual rate</div>
+                <div class="big-number" id="er-output">0.00%</div>
+                <table>
+                  <thead><tr><th>Compounding</th><th>Effective annual rate</th></tr></thead>
+                  <tbody id="er-table"></tbody>
+                </table>
+              </div>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="section" id="fv-pv" data-topic="future value present value time value of money">
+        <h3>Future value and present value</h3>
+        <div class="grid">
+          <article class="card">
+            <h4>Future value</h4>
+            <p>Future value moves money forward through time.</p>
+            <div class="formula">FV = PV(1 + r)<sup>t</sup></div>
+            <p>It asks: what does money today become later?</p>
+          </article>
+
+          <article class="card">
+            <h4>Present value</h4>
+            <p>Present value discounts money backward through time.</p>
+            <div class="formula">PV = FV / (1 + r)<sup>t</sup></div>
+            <p>It asks: what is future money worth today?</p>
+          </article>
+
+          <article class="card full" id="calc-pv">
+            <h4>Calculator: present value</h4>
+            <div class="calc">
+              <div class="inputs">
+                <label>Future value
+                  <input id="pv-fv" type="number" value="1000" step="50">
+                </label>
+                <label>Annual discount rate (%)
+                  <input id="pv-rate" type="number" value="5" step="0.1">
+                </label>
+                <label>Time in years
+                  <input id="pv-years" type="number" value="3" step="0.5">
+                </label>
+                <label>Compounding periods per year
+                  <input id="pv-n" type="number" value="1" min="1" step="1">
+                </label>
+              </div>
+              <div class="result-panel">
+                <div class="sub-number">Present value</div>
+                <div class="big-number" id="pv-output">£0.00</div>
+                <div class="mini-grid">
+                  <div class="metric"><span>Discount factor</span><strong id="pv-df">0.0000</strong></div>
+                  <div class="metric"><span>Value lost to time</span><strong id="pv-loss">£0.00</strong></div>
+                </div>
+                <svg class="chart" id="pv-chart" viewBox="0 0 760 260" role="img" aria-label="Present value chart"></svg>
+              </div>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="section" id="discount-factors" data-topic="discount factors">
+        <h3>Discount factors</h3>
+        <div class="grid">
+          <article class="card">
+            <h4>Concept</h4>
+            <p>A discount factor tells us what £1 received in the future is worth today.</p>
+            <div class="formula">DF = 1 / (1 + r)<sup>t</sup><br>PV = FV × DF</div>
+            <p>If the discount factor is 0.8638, then £1 in the future is worth about £0.8638 today.</p>
+          </article>
+
+          <article class="card" id="calc-discount">
+            <h4>Calculator: discount factor</h4>
+            <div class="inputs">
+              <label>Annual discount rate (%)
+                <input id="df-rate" type="number" value="5" step="0.1">
+              </label>
+              <label>Time in years
+                <input id="df-years" type="number" value="3" step="0.5">
+              </label>
+            </div>
+            <div class="result-panel" style="margin-top:14px">
+              <div class="sub-number">Discount factor</div>
+              <div class="big-number" id="df-output">0.0000</div>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="section" id="interpolation" data-topic="interpolation extrapolation">
+        <h3>Interpolation and extrapolation</h3>
+        <div class="grid">
+          <article class="card">
+            <h4>Concept</h4>
+            <p>Interpolation estimates a value between known data points. Extrapolation estimates outside the known range.</p>
+            <div class="formula">y = y₁ + [(x − x₁)/(x₂ − x₁)](y₂ − y₁)</div>
+            <p>Interpolation is usually safer. Extrapolation assumes the pattern continues beyond the known data.</p>
+          </article>
+
+          <article class="card full" id="calc-interpolation">
+            <h4>Calculator: linear interpolation</h4>
+            <div class="calc">
+              <div class="inputs">
+                <label>x1
+                  <input id="ip-x1" type="number" value="1" step="0.1">
+                </label>
+                <label>x2
+                  <input id="ip-x2" type="number" value="3" step="0.1">
+                </label>
+                <label>x to estimate
+                  <input id="ip-x" type="number" value="2" step="0.1">
+                </label>
+                <label>y1 (%)
+                  <input id="ip-y1" type="number" value="4" step="0.1">
+                </label>
+                <label>y2 (%)
+                  <input id="ip-y2" type="number" value="6" step="0.1">
+                </label>
+              </div>
+              <div class="result-panel">
+                <div class="sub-number">Estimated y</div>
+                <div class="big-number" id="ip-output">0.00%</div>
+                <svg class="chart" id="ip-chart" viewBox="0 0 760 260" role="img" aria-label="Interpolation chart"></svg>
+              </div>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="section" id="glossary" data-topic="formula map variables chapter">
+        <h3>Formula map</h3>
+        <div class="grid">
+          <article class="card third">
+            <h4>Move money forward</h4>
+            <div class="formula">FV = PV(1 + r)<sup>t</sup></div>
+            <p>Used for investment growth, savings, and compounding.</p>
+          </article>
+          <article class="card third">
+            <h4>Move money backward</h4>
+            <div class="formula">PV = FV / (1 + r)<sup>t</sup></div>
+            <p>Used for discounting, valuation, and cashflow analysis.</p>
+          </article>
+          <article class="card third">
+            <h4>Convert quote to reality</h4>
+            <div class="formula">EAR = (1 + r/n)<sup>n</sup> − 1</div>
+            <p>Used to compare rates with different compounding frequencies.</p>
+          </article>
+
+          <article class="card full">
+            <h4>Chapter 1 notes</h4>
+            <table>
+              <thead><tr><th>Topic</th><th>Core idea</th><th>Where it appears</th></tr></thead>
+              <tbody>
+                <tr><td>Simple interest</td><td>Straight-line growth on original principal</td><td>Money markets, quick approximations</td></tr>
+                <tr><td>Compound interest</td><td>Interest earns interest</td><td>Investing, loans, savings, bonds</td></tr>
+                <tr><td>Nominal/effective rates</td><td>Quoted rate vs actual rate after compounding</td><td>Rate comparison, savings, loans</td></tr>
+                <tr><td>Future value</td><td>Value of money at a future date</td><td>Growth projections</td></tr>
+                <tr><td>Present value</td><td>Current value of future money</td><td>Valuation and discounting</td></tr>
+                <tr><td>Discount factors</td><td>Present value of £1 in the future</td><td>Cashflow pricing, yield curves</td></tr>
+                <tr><td>Interpolation</td><td>Estimate between known points</td><td>Missing rates, yield curves, modelling</td></tr>
+              </tbody>
+            </table>
+          </article>
+        </div>
+      </section>
+
+      <div class="footer">
+        Built as a learning lab. Educational only, not financial advice. No real-money goblins allowed without adult supervision and proper legality.
+      </div>
+    </main>
+  </div>
+
+  <script>
+    const money = new Intl.NumberFormat("en-GB", { style: "currency", currency: "GBP" });
+    const pct = (x, dp = 2) => `${(x * 100).toFixed(dp)}%`;
+    const num = (id) => Number(document.getElementById(id).value || 0);
+
+    function pointsToPath(points, w=700, h=200, pad=30) {
+      const xs = points.map(p => p.x), ys = points.map(p => p.y);
+      const minX = Math.min(...xs), maxX = Math.max(...xs);
+      const minY = Math.min(...ys), maxY = Math.max(...ys);
+      const spanX = maxX - minX || 1;
+      const spanY = maxY - minY || 1;
+      return points.map((p, i) => {
+        const x = pad + ((p.x - minX) / spanX) * (w - pad * 2);
+        const y = pad + (1 - ((p.y - minY) / spanY)) * (h - pad * 2);
+        return `${i === 0 ? "M" : "L"} ${x.toFixed(2)} ${y.toFixed(2)}`;
+      }).join(" ");
+    }
+
+    function drawLineChart(svgId, series, labels = {}) {
+      const svg = document.getElementById(svgId);
+      const w = 760, h = 260, pad = 42;
+      const all = series.flatMap(s => s.points);
+      const xs = all.map(p => p.x), ys = all.map(p => p.y);
+      const minX = Math.min(...xs), maxX = Math.max(...xs);
+      const minY = Math.min(...ys), maxY = Math.max(...ys);
+      const safeSpanY = (maxY - minY) || 1;
+
+      function sx(x) { return pad + ((x - minX) / ((maxX - minX) || 1)) * (w - pad * 2); }
+      function sy(y) { return pad + (1 - ((y - minY) / safeSpanY)) * (h - pad * 2); }
+
+      let html = "";
+      for (let i = 0; i <= 4; i++) {
+        const y = pad + i * ((h - pad * 2) / 4);
+        html += `<line class="gridline" x1="${pad}" y1="${y}" x2="${w-pad}" y2="${y}"></line>`;
+      }
+      html += `<line class="axis" x1="${pad}" y1="${h-pad}" x2="${w-pad}" y2="${h-pad}"></line>`;
+      html += `<line class="axis" x1="${pad}" y1="${pad}" x2="${pad}" y2="${h-pad}"></line>`;
+
+      for (const s of series) {
+        const d = s.points.map((p, i) => `${i ? "L" : "M"} ${sx(p.x).toFixed(2)} ${sy(p.y).toFixed(2)}`).join(" ");
+        html += `<path class="${s.className}" d="${d}"></path>`;
+      }
+
+      if (labels.x) html += `<text class="chart-label" x="${w/2}" y="${h-6}" text-anchor="middle">${labels.x}</text>`;
+      if (labels.y) html += `<text class="chart-label" x="8" y="${h/2}" transform="rotate(-90 8 ${h/2})" text-anchor="middle">${labels.y}</text>`;
+
+      svg.innerHTML = html;
+    }
+
+    function drawInterpolationChart() {
+      const x1 = num("ip-x1"), x2 = num("ip-x2"), x = num("ip-x");
+      const y1 = num("ip-y1"), y2 = num("ip-y2");
+      const y = y1 + ((x - x1) / (x2 - x1 || 1)) * (y2 - y1);
+      document.getElementById("ip-output").textContent = `${y.toFixed(2)}%`;
+
+      const svg = document.getElementById("ip-chart");
+      const w = 760, h = 260, pad = 50;
+      const minX = Math.min(x1, x2, x), maxX = Math.max(x1, x2, x);
+      const minY = Math.min(y1, y2, y), maxY = Math.max(y1, y2, y);
+      const sx = val => pad + ((val - minX) / ((maxX - minX) || 1)) * (w - pad*2);
+      const sy = val => pad + (1 - ((val - minY) / ((maxY - minY) || 1))) * (h - pad*2);
+
+      svg.innerHTML = `
+        <line class="axis" x1="${pad}" y1="${h-pad}" x2="${w-pad}" y2="${h-pad}"></line>
+        <line class="axis" x1="${pad}" y1="${pad}" x2="${pad}" y2="${h-pad}"></line>
+        <path class="line-gold" d="M ${sx(x1)} ${sy(y1)} L ${sx(x2)} ${sy(y2)}"></path>
+        <circle class="dot" cx="${sx(x1)}" cy="${sy(y1)}" r="7"></circle>
+        <circle class="dot" cx="${sx(x2)}" cy="${sy(y2)}" r="7"></circle>
+        <circle class="dot" cx="${sx(x)}" cy="${sy(y)}" r="8"></circle>
+        <text class="chart-label" x="${sx(x)}" y="${sy(y)-14}" text-anchor="middle">estimate: ${y.toFixed(2)}%</text>
+        <text class="chart-label" x="${w/2}" y="${h-6}" text-anchor="middle">x value</text>
+        <text class="chart-label" x="10" y="${h/2}" transform="rotate(-90 10 ${h/2})" text-anchor="middle">y value</text>
+      `;
+    }
+
+    function updateSimpleCompound() {
+      const P = num("sc-principal");
+      const r = num("sc-rate") / 100;
+      const t = num("sc-years");
+      const n = Math.max(num("sc-compounds"), 1);
+
+      const simple = P * (1 + r * t);
+      const compound = P * Math.pow(1 + r / n, n * t);
+      const diff = compound - simple;
+
+      document.getElementById("sc-simple").textContent = money.format(simple);
+      document.getElementById("sc-compound").textContent = money.format(compound);
+      document.getElementById("sc-diff").textContent = money.format(diff);
+      document.getElementById("sc-edge").textContent = pct(diff / simple);
+
+      const steps = Math.max(2, Math.ceil(t * 4));
+      const simplePts = [], compPts = [];
+      for (let i = 0; i <= steps; i++) {
+        const year = (t / steps) * i;
+        simplePts.push({ x: year, y: P * (1 + r * year) });
+        compPts.push({ x: year, y: P * Math.pow(1 + r / n, n * year) });
+      }
+      drawLineChart("sc-chart", [
+        { points: simplePts, className: "line-blue" },
+        { points: compPts, className: "line-green" }
+      ], { x: "time", y: "amount" });
+    }
+
+    function updateEffectiveRate() {
+      const r = num("er-rate") / 100;
+      const n = Math.max(num("er-n"), 1);
+      const ear = Math.pow(1 + r/n, n) - 1;
+      document.getElementById("er-output").textContent = pct(ear);
+
+      const options = [
+        ["Annually", 1],
+        ["Semi-annually", 2],
+        ["Quarterly", 4],
+        ["Monthly", 12],
+        ["Daily", 365]
+      ];
+      document.getElementById("er-table").innerHTML = options.map(([name, periods]) => {
+        const value = Math.pow(1 + r/periods, periods) - 1;
+        return `<tr><td>${name}</td><td>${pct(value)}</td></tr>`;
+      }).join("");
+    }
+
+    function updatePV() {
+      const FV = num("pv-fv");
+      const r = num("pv-rate") / 100;
+      const t = num("pv-years");
+      const n = Math.max(num("pv-n"), 1);
+      const df = 1 / Math.pow(1 + r/n, n*t);
+      const pv = FV * df;
+      document.getElementById("pv-output").textContent = money.format(pv);
+      document.getElementById("pv-df").textContent = df.toFixed(4);
+      document.getElementById("pv-loss").textContent = money.format(FV - pv);
+
+      const steps = Math.max(2, Math.ceil(t * 4));
+      const pts = [];
+      for (let i = 0; i <= steps; i++) {
+        const year = (t / steps) * i;
+        const value = FV / Math.pow(1 + r/n, n*year);
+        pts.push({ x: year, y: value });
+      }
+      drawLineChart("pv-chart", [{ points: pts, className: "line-gold" }], { x: "time discounted back", y: "present value" });
+    }
+
+    function updateDF() {
+      const r = num("df-rate") / 100;
+      const t = num("df-years");
+      const df = 1 / Math.pow(1 + r, t);
+      document.getElementById("df-output").textContent = df.toFixed(4);
+    }
+
+    function updateAll() {
+      updateSimpleCompound();
+      updateEffectiveRate();
+      updatePV();
+      updateDF();
+      drawInterpolationChart();
+    }
+
+    document.querySelectorAll("input").forEach(input => input.addEventListener("input", updateAll));
+    updateAll();
+
+    const navLinks = [...document.querySelectorAll(".nav a")];
+    const sectionIds = navLinks.map(a => a.getAttribute("href")).filter(h => h.startsWith("#"));
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          navLinks.forEach(a => a.classList.toggle("active", a.getAttribute("href") === `#${entry.target.id}`));
+        }
+      });
+    }, { rootMargin: "-30% 0px -55% 0px" });
+
+    sectionIds.forEach(id => {
+      const el = document.querySelector(id);
+      if (el) observer.observe(el);
+    });
+
+    document.getElementById("searchBox").addEventListener("input", (e) => {
+      const q = e.target.value.trim().toLowerCase();
+      document.querySelectorAll("[data-topic]").forEach(section => {
+        const text = (section.dataset.topic + " " + section.innerText).toLowerCase();
+        section.style.display = !q || text.includes(q) ? "" : "none";
+      });
+    });
+  </script>
+</body>
+</html>
