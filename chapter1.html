@@ -575,45 +575,36 @@
         </div>
       </section>
 
-      <section class="section" id="interpolation" data-topic="interpolation extrapolation">
-        <h3>Interpolation and extrapolation</h3>
-        <div class="grid">
-          <article class="card">
-            <h4>Concept</h4>
-            <p>Interpolation estimates a value between known data points. Extrapolation estimates outside the known range.</p>
-            <div class="formula">y = y₁ + [(x − x₁)/(x₂ − x₁)](y₂ − y₁)</div>
-            <p>Interpolation is usually safer. Extrapolation assumes the pattern continues beyond the known data.</p>
-          </article>
+<article class="card">
+  <h4>Concept</h4>
 
-          <article class="card full" id="calc-interpolation">
-            <h4>Calculator: linear interpolation</h4>
-            <div class="calc">
-              <div class="inputs">
-                <label>x1
-                  <input id="ip-x1" type="number" value="1" step="0.1">
-                </label>
-                <label>x2
-                  <input id="ip-x2" type="number" value="3" step="0.1">
-                </label>
-                <label>x to estimate
-                  <input id="ip-x" type="number" value="2" step="0.1">
-                </label>
-                <label>y1 (%)
-                  <input id="ip-y1" type="number" value="4" step="0.1">
-                </label>
-                <label>y2 (%)
-                  <input id="ip-y2" type="number" value="6" step="0.1">
-                </label>
-              </div>
-              <div class="result-panel">
-                <div class="sub-number">Estimated y</div>
-                <div class="big-number" id="ip-output">0.00%</div>
-                <svg class="chart" id="ip-chart" viewBox="0 0 760 260" role="img" aria-label="Interpolation chart"></svg>
-              </div>
-            </div>
-          </article>
-        </div>
-      </section>
+  <p>
+    Interpolation estimates a value between two known data points.
+    Extrapolation estimates outside the known range.
+  </p>
+
+  <div class="formula">
+    y = y₁ + [(x − x₁)/(x₂ − x₁)](y₂ − y₁)
+  </div>
+
+  <p>
+    Straight line interpolation assumes the value changes evenly between the two known points.
+    It is simple, clear, and usually good enough for basic financial arithmetic.
+  </p>
+
+  <div class="note" style="margin-top:16px;">
+    <strong>Logarithmic interpolation:</strong>
+    Log interpolation uses the same idea, but applies it to the logarithms of the rates:
+    <br><br>
+    <span style="font-family:var(--mono); color:var(--text);">
+      log(i) = log(i₁) + [log(i₂) − log(i₁)] × ((d − d₁) / (d₂ − d₁))
+    </span>
+    <br><br>
+    This can give a smoother curve when rates or values change proportionally rather than by equal absolute amounts.
+    Straight line interpolation is simpler; logarithmic interpolation is smoother.
+  </div>
+</article>
+   
 
       <section class="section" id="glossary" data-topic="formula map variables chapter">
         <h3>Formula map</h3>
